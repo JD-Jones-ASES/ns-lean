@@ -30,26 +30,56 @@ noncomputable def fam4 : ℕ → Finset (ZMod 3)[X]
 
 /-- The `e`-th member of the first family lies in `P_{3,8e}`. -/
 theorem fam0_allBelow (e : ℕ) : AllBelow (8 * e) (fam0 e) := by
-  sorry
+  induction e with
+  | zero => simpa [fam0] using base0_allBelow
+  | succ e ih =>
+      have h : 8 * (e + 1) = 8 * e + 8 := by ring
+      rw [h]
+      simp only [fam0]
+      exact lift_allBelow (8 * e) (fam0 e) ih
 
 /-- The `e`-th member of the first family has `810^e` elements. -/
 theorem fam0_card (e : ℕ) : (fam0 e).card = 810 ^ e := by
-  sorry
+  induction e with
+  | zero => simpa [fam0] using base0_card
+  | succ e ih =>
+      simp only [fam0]
+      rw [lift_card (8 * e) (fam0 e) (fam0_allBelow e), ih]
+      ring
 
 /-- Every member of the first family is square-difference-free. -/
 theorem fam0_sdf (e : ℕ) : SDF (fam0 e) := by
-  sorry
+  induction e with
+  | zero => simpa [fam0] using base0_sdf
+  | succ e ih =>
+      simp only [fam0]
+      exact lift_sdf (8 * e) (fam0 e) ⟨4 * e, by ring⟩ (fam0_allBelow e) ih
 
 /-- The `e`-th member of the second family lies in `P_{3,8e+4}`. -/
 theorem fam4_allBelow (e : ℕ) : AllBelow (8 * e + 4) (fam4 e) := by
-  sorry
+  induction e with
+  | zero => simpa [fam4] using base4_allBelow
+  | succ e ih =>
+      have h : 8 * (e + 1) + 4 = (8 * e + 4) + 8 := by ring
+      rw [h]
+      simp only [fam4]
+      exact lift_allBelow (8 * e + 4) (fam4 e) ih
 
 /-- The `e`-th member of the second family has `27 · 810^e` elements. -/
 theorem fam4_card (e : ℕ) : (fam4 e).card = 27 * 810 ^ e := by
-  sorry
+  induction e with
+  | zero => simpa [fam4] using base4_card
+  | succ e ih =>
+      simp only [fam4]
+      rw [lift_card (8 * e + 4) (fam4 e) (fam4_allBelow e), ih]
+      ring
 
 /-- Every member of the second family is square-difference-free. -/
 theorem fam4_sdf (e : ℕ) : SDF (fam4 e) := by
-  sorry
+  induction e with
+  | zero => simpa [fam4] using base4_sdf
+  | succ e ih =>
+      simp only [fam4]
+      exact lift_sdf (8 * e + 4) (fam4 e) ⟨4 * e + 2, by ring⟩ (fam4_allBelow e) ih
 
 end NS

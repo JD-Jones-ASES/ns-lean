@@ -19,36 +19,87 @@ open Polynomial
 
 /-- The finite set `polyLT n` is exactly the set of polynomials of degree below `n`. -/
 theorem mem_polyLT (n : ℕ) (f : (ZMod 3)[X]) : f ∈ polyLT n ↔ f.degree < n := by
-  sorry
+  classical
+  constructor
+  · intro hf
+    unfold polyLT at hf
+    rw [Finset.mem_image] at hf
+    obtain ⟨c, -, rfl⟩ := hf
+    refine lt_of_le_of_lt (degree_sum_le _ _) ?_
+    refine (Finset.sup_lt_iff (WithBot.bot_lt_coe n)).mpr ?_
+    intro i _
+    exact below_C_mul_X_pow (c i) (i : ℕ) n i.isLt
+  · intro hf
+    unfold polyLT
+    rw [Finset.mem_image]
+    refine ⟨fun i : Fin n => f.coeff (i : ℕ), Finset.mem_univ _, ?_⟩
+    show (∑ i : Fin n, C (f.coeff (i : ℕ)) * X ^ (i : ℕ)) = f
+    rcases eq_or_ne f 0 with rfl | h0
+    · simp
+    · have hn : f.natDegree < n := (natDegree_lt_iff_degree_lt h0).mpr hf
+      rw [Fin.sum_univ_eq_sum_range (fun i => C (f.coeff i) * (X : (ZMod 3)[X]) ^ i) n]
+      simp only [C_mul_X_pow_eq_monomial]
+      exact (f.as_sum_range' n hn).symm
 
 /-- There are at most `3^n` polynomials of degree below `n`. -/
 theorem polyLT_card_le (n : ℕ) : (polyLT n).card ≤ 3 ^ n := by
-  sorry
+  classical
+  unfold polyLT
+  refine le_trans Finset.card_image_le ?_
+  simp [Finset.card_univ, ZMod.card]
 
 /-- The polynomials of degree below `n` sit inside those of degree below `n'` for `n ≤ n'`. -/
 theorem polyLT_mono {n n' : ℕ} (h : n ≤ n') : polyLT n ⊆ polyLT n' := by
-  sorry
+  intro f hf
+  rw [mem_polyLT] at hf ⊢
+  exact lt_of_lt_of_le hf (by exact_mod_cast h)
 
 /-- Every square-difference-free set of polynomials of degree below `n` is counted by `D_3(n)`. -/
 theorem le_D3_of_sdf {n : ℕ} {A : Finset (ZMod 3)[X]} (hA : AllBelow n A) (hS : SDF A) :
     A.card ≤ D3 n := by
-  sorry
+  classical
+  have hsub : A ⊆ polyLT n := fun f hf => (mem_polyLT n f).mpr (hA f hf)
+  unfold D3
+  refine Finset.le_sup (f := Finset.card) ?_
+  simp only [Finset.mem_filter, Finset.mem_powerset]
+  exact ⟨hsub, hS⟩
 
 /-- `D_3` is nondecreasing. -/
 theorem D3_mono : Monotone D3 := by
-  sorry
+  intro n n' h
+  classical
+  unfold D3
+  exact Finset.sup_mono
+    (Finset.filter_subset_filter _ (Finset.powerset_mono.mpr (polyLT_mono h)))
 
 /-- `D_3(n) ≤ 3^n`, the trivial upper bound. -/
 theorem D3_le (n : ℕ) : D3 n ≤ 3 ^ n := by
-  sorry
+  classical
+  unfold D3
+  refine Finset.sup_le fun A hA => ?_
+  have hsub : A ⊆ polyLT n := Finset.mem_powerset.mp (Finset.mem_filter.mp hA).1
+  exact le_trans (Finset.card_le_card hsub) (polyLT_card_le n)
 
 /-- `D_3(n) ≥ 1`, witnessed by the one-element set `{0}`. -/
 theorem one_le_D3 (n : ℕ) : 1 ≤ D3 n := by
-  sorry
+  classical
+  have hA : AllBelow n ({0} : Finset (ZMod 3)[X]) := by
+    intro f hf
+    rw [Finset.mem_singleton] at hf
+    subst hf
+    exact below_zero n
+  have hS : SDF ({0} : Finset (ZMod 3)[X]) := by
+    intro f hf g hg z hz
+    rw [Finset.mem_singleton] at hf hg
+    subst hf; subst hg
+    have h0 : z ^ 2 = 0 := by simpa using hz.symm
+    simpa using h0
+  simpa using le_D3_of_sdf hA hS
 
 /-- The first family gives `D_3(8e) ≥ 810^e`. -/
 theorem pow_le_D3 (e : ℕ) : 810 ^ e ≤ D3 (8 * e) := by
-  sorry
+  have h := le_D3_of_sdf (fam0_allBelow e) (fam0_sdf e)
+  rwa [fam0_card e] at h
 
 /-- **The growth rate.** `16/21 = 0.76190… ≤ liminf log D_3(n) / (n log 3)`.
 
@@ -58,6 +109,71 @@ at least `(1/8 - 1/n) log 810 / log 3`; letting `n` grow, the lower limit is at 
 theorem liminf_ge_internal :
     (16 / 21 : ℝ) ≤
       Filter.liminf (fun n : ℕ => Real.log (D3 n) / (n * Real.log 3)) Filter.atTop := by
-  sorry
+  set u : ℕ → ℝ := fun n => Real.log (D3 n) / (n * Real.log 3) with hu
+  have h3 : (0 : ℝ) < Real.log 3 := Real.log_pos (by norm_num)
+  have h810 : (0 : ℝ) < Real.log 810 := Real.log_pos (by norm_num)
+  set c : ℝ := Real.log 810 / (8 * Real.log 3) with hc
+  have hc0 : 0 < c := by rw [hc]; positivity
+  have hclog : Real.log 810 = 8 * c * Real.log 3 := by
+    rw [hc]; field_simp
+  -- The sequence is bounded above by `1`, which pays the cobounded side condition.
+  have hb : ∀ᶠ n : ℕ in Filter.atTop, u n ≤ 1 := by
+    filter_upwards [Filter.eventually_ge_atTop 1] with n hn
+    have hn0 : (0 : ℝ) < n := by exact_mod_cast hn
+    have hD : (D3 n : ℝ) ≤ (3 : ℝ) ^ n := by exact_mod_cast D3_le n
+    have hD1 : (0 : ℝ) < (D3 n : ℝ) := by exact_mod_cast one_le_D3 n
+    have hlog : Real.log (D3 n) ≤ (n : ℝ) * Real.log 3 := by
+      have h := Real.log_le_log hD1 hD
+      rwa [Real.log_pow] at h
+    simp only [hu]
+    rw [div_le_one (by positivity)]
+    exact hlog
+  have hcob : Filter.IsCoboundedUnder (· ≥ ·) Filter.atTop u :=
+    Filter.IsBoundedUnder.isCoboundedUnder_ge ⟨1, hb⟩
+  -- `16/21 ≤ log 810 / (8 log 3)` is the comparison `3^128 ≤ 810^21`.
+  have hkey : (16 / 21 : ℝ) ≤ c := by
+    rw [hc, le_div_iff₀ (by positivity)]
+    have hnum : ((3 : ℝ) ^ (128 : ℕ)) ≤ ((810 : ℝ) ^ (21 : ℕ)) := by norm_num
+    have h1 : Real.log ((3 : ℝ) ^ (128 : ℕ)) ≤ Real.log ((810 : ℝ) ^ (21 : ℕ)) :=
+      Real.log_le_log (by positivity) hnum
+    rw [Real.log_pow, Real.log_pow] at h1
+    push_cast at h1
+    linarith
+  refine le_trans hkey ?_
+  refine le_of_forall_lt_imp_le_of_dense fun ρ hρ => ?_
+  refine Filter.le_liminf_of_le hcob ?_
+  obtain ⟨N, hN⟩ := exists_nat_ge (7 * c / (c - ρ))
+  have hcρ : 0 < c - ρ := sub_pos.mpr hρ
+  have hN' : 7 * c ≤ (N : ℝ) * (c - ρ) := by
+    rw [div_le_iff₀ hcρ] at hN
+    linarith
+  filter_upwards [Filter.eventually_ge_atTop (max N 8)] with n hn
+  have hn8 : 8 ≤ n := le_trans (le_max_right N 8) hn
+  have hnN : (N : ℝ) ≤ (n : ℝ) := by exact_mod_cast le_trans (le_max_left N 8) hn
+  have hn0 : (0 : ℝ) < n := by
+    have hpos : (0 : ℕ) < n := by omega
+    exact_mod_cast hpos
+  have hdiv1 : 8 * (n / 8) ≤ n := by omega
+  have hdiv2 : n ≤ 8 * (n / 8) + 7 := by omega
+  have hge : (810 : ℕ) ^ (n / 8) ≤ D3 n := le_trans (pow_le_D3 (n / 8)) (D3_mono hdiv1)
+  have hgeR : ((810 : ℝ)) ^ (n / 8) ≤ (D3 n : ℝ) := by exact_mod_cast hge
+  have hlog : ((n / 8 : ℕ) : ℝ) * Real.log 810 ≤ Real.log (D3 n) := by
+    have h := Real.log_le_log (by positivity) hgeR
+    rwa [Real.log_pow] at h
+  have hen : (n : ℝ) ≤ 8 * ((n / 8 : ℕ) : ℝ) + 7 := by exact_mod_cast hdiv2
+  have hcl : (0 : ℝ) < c * Real.log 3 := by positivity
+  have hNn : 7 * c ≤ (n : ℝ) * (c - ρ) := le_trans hN' (by nlinarith)
+  have step1 : ((n : ℝ) - 7) * (c * Real.log 3) ≤ ((n / 8 : ℕ) : ℝ) * Real.log 810 := by
+    have h : (0 : ℝ) ≤ (8 * ((n / 8 : ℕ) : ℝ) - ((n : ℝ) - 7)) * (c * Real.log 3) :=
+      mul_nonneg (by linarith) hcl.le
+    rw [hclog]
+    nlinarith [h]
+  have step2 : ρ * ((n : ℝ) * Real.log 3) ≤ ((n : ℝ) - 7) * (c * Real.log 3) := by
+    have h : (0 : ℝ) ≤ ((n : ℝ) * (c - ρ) - 7 * c) * Real.log 3 :=
+      mul_nonneg (by linarith) h3.le
+    nlinarith [h]
+  simp only [hu]
+  rw [le_div_iff₀ (by positivity)]
+  linarith
 
 end NS
