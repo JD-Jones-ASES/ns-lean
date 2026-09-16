@@ -153,13 +153,39 @@ theorem degree_V_add_P_mul_R_le (s : Fin 4 → ZMod 3) (r : Fin 3 → ZMod 3) :
 in a field and degree below `3`. -/
 theorem eq_zero_of_degree_le_two_of_eval (f : (ZMod 3)[X]) (hf : f.degree ≤ 2)
     (h0 : f.eval 0 = 0) (h1 : f.eval 1 = 0) (h2 : f.eval 2 = 0) : f = 0 := by
-  sorry
+  have hnat : f.natDegree ≤ 2 := natDegree_le_iff_degree_le.mpr (by exact_mod_cast hf)
+  refine eq_zero_of_natDegree_lt_card_of_eval_eq_zero' f (Finset.univ : Finset (ZMod 3)) ?_ ?_
+  · have hcases : ∀ c : ZMod 3, c = 0 ∨ c = 1 ∨ c = 2 := by decide
+    intro c _
+    rcases hcases c with rfl | rfl | rfl
+    · exact h0
+    · exact h1
+    · exact h2
+  · rw [Finset.card_univ, ZMod.card]
+    omega
 
 /-- `P` divides every polynomial vanishing at `0`, `1` and `2`: the remainder of the division by
 the monic `P` has degree below `3` and vanishes there too, hence is zero. -/
 theorem P_dvd_of_eval (z : (ZMod 3)[X]) (h0 : z.eval 0 = 0) (h1 : z.eval 1 = 0)
     (h2 : z.eval 2 = 0) : P ∣ z := by
-  sorry
+  have hsplit : z %ₘ P + P * (z /ₘ P) = z := modByMonic_add_div z P
+  have hrem : ∀ c : ZMod 3, z.eval c = 0 → (z %ₘ P).eval c = 0 := by
+    intro c hc
+    have h := congrArg (Polynomial.eval c) hsplit
+    simp only [eval_add, eval_mul, eval_P c, zero_mul, add_zero, hc] at h
+    exact h
+  have hP_ne_one : P ≠ 1 := fun h => by
+    have h3 : (3 : ℕ) = 0 := by rw [← natDegree_P, h, natDegree_one]
+    exact absurd h3 (by norm_num)
+  have hdeg : (z %ₘ P).degree ≤ 2 := by
+    have h := natDegree_modByMonic_lt z P_monic hP_ne_one
+    rw [natDegree_P] at h
+    refine le_trans degree_le_natDegree ?_
+    have h' : (z %ₘ P).natDegree ≤ 2 := by omega
+    exact_mod_cast h'
+  have hzero : z %ₘ P = 0 :=
+    eq_zero_of_degree_le_two_of_eval _ hdeg (hrem 0 h0) (hrem 1 h1) (hrem 2 h2)
+  exact (modByMonic_eq_zero_iff_dvd P_monic).mp hzero
 
 /-- A multiple of `Q` of degree below `6` is zero. -/
 theorem eq_zero_of_Q_dvd_of_degree_lt (f : (ZMod 3)[X]) (hf : f.degree < 6) (h : Q ∣ f) :
