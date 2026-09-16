@@ -82,6 +82,36 @@ and `T^2`-coefficient `-c`; a nonzero square of degree below `4` is the square o
 polynomial `v + u T`, whose constant term is `v^2` and whose `T^2`-coefficient is `u^2`; so
 `v^2 + u^2 = 0`, and in `F_3` that forces `u = v = 0`. -/
 theorem base4_sdf : SDF base4 := by
-  sorry
+  classical
+  intro f hf g hg z hz
+  -- A difference of two elements of `B_4` has degree below `4`, so the square `z^2` does too,
+  -- and `natDegree (z^2) = 2 · natDegree z` makes `z` linear.
+  have hd : Below 4 (g - f) := (base4_allBelow g hg).sub (base4_allBelow f hf)
+  have hz1 : z.natDegree ≤ 1 := by
+    have h3 : (g - f).natDegree ≤ 3 := Below.natDegree_le (m := 3) hd
+    rw [hz, Polynomial.natDegree_pow] at h3
+    omega
+  -- The two coefficients of a square of a linear polynomial: `v^2` at `1` and `u^2` at `T^2`.
+  have e0 : (z ^ 2).coeff 0 = z.coeff 0 ^ 2 := by
+    rw [sq, Polynomial.mul_coeff_zero, ← sq]
+  have e2 : (z ^ 2).coeff 2 = z.coeff 1 ^ 2 := by
+    simpa using Polynomial.coeff_pow_of_natDegree_le (p := z) (n := 1) (m := 2) hz1
+  -- The same two coefficients of the difference: `c` and `-c`.
+  rw [base4, Finset.mem_image] at hf hg
+  obtain ⟨t, -, rfl⟩ := hf
+  obtain ⟨t', -, rfl⟩ := hg
+  have d0 : (base4Map t' - base4Map t).coeff 0 = t'.2.2 - t.2.2 := by
+    simp [base4Map, Polynomial.coeff_X_pow, mul_sub]
+  have d2 : (base4Map t' - base4Map t).coeff 2 = -(t'.2.2 - t.2.2) := by
+    simp only [base4Map, mul_sub, mul_one, Polynomial.coeff_sub, Polynomial.coeff_add,
+      Polynomial.coeff_C_mul, Polynomial.coeff_X_pow, Polynomial.coeff_X, Polynomial.coeff_C]
+    norm_num
+    ring
+  -- Hence `v^2 + u^2 = c + (-c) = 0`, which in `F_3` forces `u = v = 0`.
+  have h0 : z.coeff 0 ^ 2 = t'.2.2 - t.2.2 := by rw [← e0, ← hz, d0]
+  have h2 : z.coeff 1 ^ 2 = -(t'.2.2 - t.2.2) := by rw [← e2, ← hz, d2]
+  obtain ⟨hu, hv⟩ := eq_zero_of_sq_add_sq (z.coeff 1) (z.coeff 0) (by rw [h0, h2]; ring)
+  rw [Polynomial.eq_X_add_C_of_natDegree_le_one hz1, hu, hv]
+  simp
 
 end NS
