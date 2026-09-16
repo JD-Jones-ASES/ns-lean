@@ -8,7 +8,7 @@ Walks every constant in the environment whose name begins with `NS.` (every decl
 development, `Challenge.lean` excluded since it is not imported), `_private.NS.` (private
 auxiliaries of the `NS.*` modules) or `_private.Solution.`, and collects the axioms each depends
 on. Anything outside `propext`, `Classical.choice`, `Quot.sound` is reported with `logError`, which
-fails `lake build`. The audit also fails if it matched fewer than the floor below (so a renamed
+fails `lake build`. The audit also fails if it matched fewer than the floor below (180) (so a renamed
 namespace cannot make it pass vacuously) or if any of the six compared theorems is missing from
 the environment.
 -/
@@ -29,8 +29,8 @@ run_cmd do
         unless allowed.contains ax do
           rejected := rejected + 1
           logError m!"Unexpected axiom dependency: {name} -> {ax}"
-  unless checked ≥ 100 do
-    logError m!"Axiom audit matched only {checked} project constants; expected at least 100"
+  unless checked ≥ 180 do
+    logError m!"Axiom audit matched only {checked} project constants; expected at least 180"
   for n in [`NS.D3_8_ge_810, `NS.conjecture13_fails_3_2_8, `NS.D3_8e_ge, `NS.D3_8e4_ge,
       `NS.conjecture13_fails_3_2_all, `NS.liminf_ge] do
     unless env.contains n do

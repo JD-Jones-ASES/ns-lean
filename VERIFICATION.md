@@ -26,13 +26,12 @@ python scripts/check-source.py
 python scripts/check_construction.py
 ```
 
-The build audits DESK_FILLS project declarations, including private ones, with only `propext`,
+The build audits 188 project declarations, including private ones, with only `propext`,
 `Classical.choice` and `Quot.sound` permitted, and fails if any of the six compared theorems is
 missing. Challenge.lean intentionally contains six proof placeholders; Solution.lean and the
 modules it imports contain none, and Solution.lean does not import Challenge.lean. The source
 guard rejects placeholders, added axioms and kernel bypasses. There is no `native_decide`: the
 largest kernel computations are the 90-pair code property and the comparison `3^128 ≤ 810^21`.
-Definitions, theorem types and proof terms are those of commit DESK_FILLS.
 
 Lean 4.33.0 and Mathlib v4.33.0 (commit `db584cd6d46c92f209a44c0f1c829460d327499d`) are pinned by
 the committed manifest; `lake update` is never run.
