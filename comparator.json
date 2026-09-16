@@ -1,0 +1,20 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "NS.D3_8_ge_810",
+    "NS.conjecture13_fails_3_2_8",
+    "NS.D3_8e_ge",
+    "NS.D3_8e4_ge",
+    "NS.conjecture13_fails_3_2_all",
+    "NS.liminf_ge"
+  ],
+  "definition_names": [
+    "NS.SDF",
+    "NS.DegLT",
+    "NS.polyLT",
+    "NS.D3"
+  ],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": true
+}

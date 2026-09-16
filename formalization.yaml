@@ -1,0 +1,198 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "ns-lean: Naslund's Conjecture 13 is false at q = 3, k = 2, for every n congruent to 0 mod 4 with n >= 8"
+  description: >-
+    A Lean 4 proof that square-difference-free subsets of the polynomials of degree below n over
+    F_3 can be larger than 3^(3n/4). Call A square-difference-free when no two of its elements
+    differ by a nonzero square, and let D_3(n) be the largest size of such a set inside P_{3,n}.
+    A ten-word code S in F_3^4, in which no two words differ by a vector with every coordinate in
+    {0, 1}, drives a lift that carries a square-difference-free subset of P_{3,m} to one of
+    P_{3,m+8} with 810 times as many elements. Iterating it from the bases {0} and
+    B_4 = {a T^3 + b T + c (1 - T^2)} gives square-difference-free sets of size 810^e in degree
+    below 8e and 27 * 810^e in degree below 8e + 4, so the conjectured bound 3^(3n/4) fails at
+    every n divisible by 4 with n >= 8, and
+    16/21 <= liminf log D_3(n) / (n log 3).
+  authors: ["JD Jones"]
+  responsible_maintainers: ["JD Jones"]
+  license: "MIT"
+
+classification:
+  arxiv: ["math.NT", "math.CO"]
+  msc2020: ["11T55", "11B30", "05B40"]
+
+sources:
+  - title: "Paley graphs and Sárközy's theorem in function fields"
+    authors: ["Eric Naslund"]
+    id: "doi:10.1093/qmath/haac035"
+    type: "article"
+    location: "https://doi.org/10.1093/qmath/haac035"
+    relationship: "other"
+    author_endorsement: "not-contacted"
+    note: >-
+      The Quarterly Journal of Mathematics 74 (2023), no. 2, 627-637; arXiv:2203.01293v3. The
+      compared statements are the negation of the source's Conjecture 13 at q = 3, k = 2, for
+      every n congruent to 0 mod 4 with n >= 8. Theorem 1's construction is not formalized here,
+      and nothing is claimed at any other q or k.
+  - title: "The Sperner capacity of linear and nonlinear codes for the cyclic triangle"
+    authors: ["A. R. Calderbank", "P. Frankl", "R. L. Graham", "W.-C. W. Li", "L. A. Shepp"]
+    id: "doi:10.1023/A:1022424630332"
+    type: "article"
+    location: "https://doi.org/10.1023/A:1022424630332"
+    relationship: "background"
+    author_endorsement: "not-contacted"
+    note: >-
+      Journal of Algebraic Combinatorics 2 (1993), no. 1, 31-48. The setting of the ten-word code:
+      a linear code has at most 3^(n/2) words, so 9 at n = 4, and the LP bound there is 11. No
+      statement of this paper is formalized.
+  - title: "On the Sperner capacity of the cyclic triangle"
+    authors: ["Aart Blokhuis"]
+    id: "doi:10.1023/A:1022455407000"
+    type: "article"
+    location: "https://doi.org/10.1023/A:1022455407000"
+    relationship: "background"
+    author_endorsement: "not-contacted"
+    note: >-
+      Journal of Algebraic Combinatorics 2 (1993), no. 2, 123-124. The upper bound 2^n in the same
+      setting. Not formalized here.
+  - title: "Difference sets without squares"
+    authors: ["Imre Z. Ruzsa"]
+    id: "doi:10.1007/BF02454169"
+    type: "article"
+    location: "https://doi.org/10.1007/BF02454169"
+    relationship: "background"
+    author_endorsement: "not-contacted"
+    note: >-
+      Periodica Mathematica Hungarica 15 (1984), no. 3, 205-209. The digit construction that
+      Naslund's Theorem 1 adapts. Not formalized here.
+
+related_formalizations:
+  - id: "PALOMAR-2026-09-12-000004"
+    relationship: "other"
+    note: "rk-lean: the repository layout pattern; no mathematics shared."
+  - id: "PALOMAR-2026-09-11-000003"
+    relationship: "other"
+    note: "ry-lean: the repository layout pattern; no mathematics shared."
+
+status:
+  scope: >-
+    Six compared declarations over four compared definitions. Four of them exhibit
+    square-difference-free sets of polynomials over F_3 (810 elements in degree below 8, 810^e in
+    degree below 8e, 27 * 810^e in degree below 8e + 4) and two of them draw the consequences:
+    the conjectured bound 3^(3n/4) fails at every n divisible by 4 with n >= 8, and
+    16/21 <= liminf log D_3(n) / (n log 3). No upper bound on D_3(n) is proved, no value of
+    D_3(n) is determined, the ten-word code is not claimed to be optimal, and nothing is claimed
+    at any q other than 3. The intentional placeholders of Challenge.lean are excluded from proof
+    counts; Solution.lean does not import Challenge.lean.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+  main_results:
+    - declaration: "NS.D3_8_ge_810"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "NS.conjecture13_fails_3_2_8"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "NS.D3_8e_ge"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "NS.D3_8e4_ge"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "NS.conjecture13_fails_3_2_all"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "NS.liminf_ge"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["Claude (Anthropic)", "GPT-6 (OpenAI)", "Grok"]
+      framework: "Claude Code with parallel subagents"
+      tool_setup: >-
+        Claude (Anthropic), GPT-6 (OpenAI) and Grok were used, in some form, throughout; the
+        construction and its proofs arose in consultation among these systems, and the repository
+        was written by Claude. Lean 4.33.0 and Mathlib v4.33.0 (commit db584cd6) are pinned by the
+        committed manifest and lake update is never run. There is no native_decide; the largest
+        kernel computations are the 90-pair code check by decide and the comparison
+        3^128 <= 810^21.
+  spend_usd: "not tracked"
+  notes: "See DISCLOSURE.md."
+
+fidelity:
+  divergences: >-
+    The compared statements are the negation of the source's Conjecture 13 at q = 3, k = 2, not a
+    formalization of it, and the source's Theorem 1 is not re-derived here. Degree bounds are
+    stated as natDegree f < n, a comparison of natural numbers, so that no statement type depends
+    on an instance that can diverge; since the zero polynomial has natural degree 0, that form
+    cannot express P_{3,0} = {0}, and the recursion therefore works internally with degree in
+    WithBot, converting at n >= 1, where the two agree. The conjectured exponent is written
+    3 * n / 4 with natural division, which is exact on the hypothesis 4 divides n.
+
+review:
+  status: "self-assessed"
+  notes: >-
+    No independent human expert review and no source-author endorsement is recorded; AI agents
+    developed and cross-reviewed the proof, the statements were checked against the source text,
+    and VERIFICATION.md states what is checked and what is not.
+
+alignment:
+  namespace: "NS"
+  statements:
+    - source: "Counterexample to Naslund, Conjecture 13 at q = 3, k = 2, n = 8"
+      lean: "NS.D3_8_ge_810"
+      module: "Solution"
+      status: "proved"
+      note: "A square-difference-free subset of P_{3,8} with 810 elements, the first lift of {0}."
+    - source: "Counterexample to Naslund, Conjecture 13 at q = 3, k = 2, n = 8"
+      lean: "NS.conjecture13_fails_3_2_8"
+      module: "Solution"
+      status: "proved"
+      note: "Not every square-difference-free subset of P_{3,8} has at most 3^6 = 729 elements."
+    - source: "Not in any source: the first family"
+      lean: "NS.D3_8e_ge"
+      module: "Solution"
+      status: "proved"
+      note: "For every e >= 1, a square-difference-free subset of P_{3,8e} with 810^e elements."
+    - source: "Not in any source: the second family"
+      lean: "NS.D3_8e4_ge"
+      module: "Solution"
+      status: "proved"
+      note: "For every e, a square-difference-free subset of P_{3,8e+4} with 27 * 810^e elements."
+    - source: "Counterexample to Naslund, Conjecture 13 at q = 3, k = 2, at every admissible n >= 8"
+      lean: "NS.conjecture13_fails_3_2_all"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        For 4 dividing n and n >= 8, not every square-difference-free subset of P_{3,n} has at
+        most 3^(3n/4) elements; the two families exceed the bound by (10/9)^e.
+    - source: "Not in any source: the growth rate"
+      lean: "NS.liminf_ge"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        16/21 <= liminf log D_3(n) / (n log 3), from the first family and the comparison
+        3^128 <= 810^21.
+
+acknowledgements: >-
+  Eric Naslund for the conjecture and the construction it refines; Imre Ruzsa for the digit
+  method behind it; A. R. Calderbank, P. Frankl, R. L. Graham, W.-C. W. Li and L. A. Shepp, and
+  Aart Blokhuis, for the setting of the ten-word code; Lean, Mathlib, Comparator, lean4export,
+  NanoDa, and the Palomar policy and verifier projects. AI assistance is disclosed above and in
+  DISCLOSURE.md.
