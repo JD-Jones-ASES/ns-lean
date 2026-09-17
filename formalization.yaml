@@ -28,13 +28,14 @@ sources:
     id: "doi:10.1093/qmath/haac035"
     type: "article"
     location: "https://doi.org/10.1093/qmath/haac035"
-    relationship: "other"
+    relationship: "adapts"
     author_endorsement: "not-contacted"
     note: >-
-      The Quarterly Journal of Mathematics 74 (2023), no. 2, 627-637; arXiv:2203.01293v3. The
-      compared statements are the negation of the source's Conjecture 13 at q = 3, k = 2, for
-      every n congruent to 0 mod 4 with n >= 8. Theorem 1's construction is not formalized here,
-      and nothing is claimed at any other q or k.
+      The Quarterly Journal of Mathematics 74 (2023), no. 2, 627-637; arXiv:2203.01293v3. Adapted,
+      not formalized as stated: the development takes the source's setting (square-difference-free
+      subsets of P_{q,n}) at q = 3 and proves the negation of its Conjecture 13 at k = 2, for every
+      n congruent to 0 mod 4 with n >= 8, by a construction that is this development's. Theorem 1's
+      construction is not formalized here, and nothing is claimed at any other q or k.
   - title: "The Sperner capacity of linear and nonlinear codes for the cyclic triangle"
     authors: ["A. R. Calderbank", "P. Frankl", "R. L. Graham", "W.-C. W. Li", "L. A. Shepp"]
     id: "doi:10.1023/A:1022424630332"
