@@ -41,8 +41,8 @@ Let `m` be even and `B ⊆ P_{3,m}` square-difference-free. The lift is
 
 `L_m(B) = { V_s + P·R_r + Q·(b + s_∞ T^m + u T^{m+1}) : s ∈ S, r ∈ F_3^3, u ∈ F_3, b ∈ B }`
 
-(`NS.liftMap` on the parameter set `NS.params`, with `NS.tail` for the factor `Q` multiplies;
-the set itself is `NS.lift`). It has four properties.
+(`NS.liftMap` on the parameter set `NS.params`; `NS.tail` is the factor `Q` multiplies, and the
+lifted set is `NS.lift`). It has four properties.
 
 *Degree.* `V_s + P·R_r` has degree at most 5 (`NS.degree_V_add_P_mul_R_le`) and the tail degree
 below `m + 2`, so multiplying by `Q` stays below `m + 8` (`NS.Below.Q_mul`); hence
@@ -63,13 +63,13 @@ coefficients of the tail at `T^m` and `T^{m+1}` give `b` and `u`. No division al
 (`NS.liftMap_injOn`). The parameter set has `10 · 27 · 3 · |B|` elements (`NS.params_card`), so
 `|L_m(B)| = 810 · |B|` (`NS.lift_card`).
 
-*Square-freeness.* Suppose `g - f = z^2` with `f, g ∈ L_m(B)` coming from `(s, r, u, b)` and
+*No square differences.* Suppose `g - f = z^2` with `f, g ∈ L_m(B)` coming from `(s, r, u, b)` and
 `(s', r', u', b')`. Then `deg z^2 ≤ m + 7`, and `m` is even, so `deg z ≤ m/2 + 3` and
 `[T^{m+6}] z^2 = ([T^{m/2+3}] z)^2`. Together with the values at 0, 1, 2, this makes all four
 coordinates of `s' - s` squares in `F_3`, hence in `{0, 1}`, so `s = s'` by the code property.
 Then `z` vanishes on `F_3`, so `P ∣ z` (`NS.P_dvd_of_eval`, which rests on
 `NS.eq_zero_of_degree_le_two_of_eval`); writing `z = P·w` gives `z^2 = Q·w^2`. The `V` terms
-cancel, `Q` divides `g - f`, and `P·(R_{r'} - R_r)` has degree below 6, so `r = r'`; cancelling
+cancel, `Q` divides `g - f`, and `P·(R_{r'} - R_r)` has degree below 6, so it vanishes; cancelling
 `Q` leaves `(b' - b) + (u' - u) T^{m+1} = w^2`. A nonzero square has even degree while `m + 1` is
 odd, so `u = u'`, and then `b' - b = w^2` forces `w = 0` because `B` is square-difference-free
 (`NS.lift_sdf`).
@@ -123,7 +123,7 @@ For `n ≥ 8` and `e = ⌊n/8⌋`, monotonicity gives
 
 - Eric Naslund, *Paley graphs and Sárközy's theorem in function fields*, Quart. J. Math. 74
   (2023), no. 2, 627–637, arXiv:2203.01293v3, doi:10.1093/qmath/haac035. Theorem 1 is the
-  `q^{3n/4}` construction; Conjecture 13, at `k = 2`, is the statement refuted here.
+  `q^{3n/4}` construction for odd `q`; Conjecture 13, at `k = 2`, is the statement refuted here.
 - Imre Z. Ruzsa, *Difference sets without squares*, Period. Math. Hungar. 15 (1984), no. 3,
   205–209, doi:10.1007/BF02454169. The digit construction that Naslund's Theorem 1 adapts.
 - A. R. Calderbank, P. Frankl, R. L. Graham, W.-C. W. Li and L. A. Shepp, *The Sperner capacity of

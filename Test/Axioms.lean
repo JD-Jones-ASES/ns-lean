@@ -8,7 +8,7 @@ Walks every constant in the environment whose name begins with `NS.` (every decl
 development, `Challenge.lean` excluded since it is not imported), `_private.NS.` (private
 auxiliaries of the `NS.*` modules) or `_private.Solution.`, and collects the axioms each depends
 on. Anything outside `propext`, `Classical.choice`, `Quot.sound` is reported with `logError`, which
-fails `lake build`. The audit also fails if it matched fewer than the floor below (180) (so a renamed
+fails `lake build`. The audit also fails if it matched fewer than the floor below (180; 188 at the time of writing) (so a renamed
 namespace cannot make it pass vacuously) or if any of the six compared theorems is missing from
 the environment.
 -/

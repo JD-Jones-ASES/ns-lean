@@ -1,12 +1,14 @@
 # Square-difference-free sets in F_3[T] past the conjectured bound
 
 Let `P_{q,n}` be the polynomials of degree less than `n` over the field with `q` elements, and call
-a subset square-difference-free when no two of its elements differ by a nonzero square. Naslund
-(*Paley graphs and Sárközy's theorem in function fields*, arXiv:2203.01293v3, Quart. J. Math. 74
-(2023) 627–637) constructs, for `4 ∣ n`, a square-difference-free subset of `P_{q,n}` with
-`q^{3n/4}` elements (Theorem 1), and conjectures that no square-difference-free subset of `P_{q,n}`
-is larger (Conjecture 13, at `k = 2`). This repository proves that conjecture false at `q = 3`: the
-bound `3^{3n/4}` fails for every `n ≡ 0 (mod 4)` with `n ≥ 8`.
+a subset square-difference-free when no two of its elements differ by a nonzero square. For odd `q`
+and `4 ∣ n`, Naslund (*Paley graphs and Sárközy's theorem in function fields*, arXiv:2203.01293v3,
+Quart. J. Math. 74 (2023) 627–637, Theorem 1) constructs a square-difference-free subset of
+`P_{q,n}` with `q^{3n/4}` elements, and conjectures that none is larger. His Conjecture 13 reads:
+"Let k ≥ 2, and suppose that gcd(k, q − 1) > 1. For n ≡ 0 (2k), any set A ⊂ P_{q,n} that does not
+contain a k-th power difference has size at most |A| ≤ q^{n(1 − 1/k²)}. In particular, for k = 2
+and q odd, we conjecture that Theorem 1 is tight." This repository proves the case `k = 2`, `q = 3`
+false: the bound `3^{3n/4}` fails for every `n ≡ 0 (mod 4)` with `n ≥ 8`.
 
 The six theorems:
 
@@ -27,15 +29,15 @@ and `Q = P^2`. For even `m` and a square-difference-free `B ⊆ P_{3,m}`, the po
 from the bases `{0} ⊆ P_{3,0}` and `B_4 = {aT^3 + bT + c(1 - T^2)} ⊆ P_{3,4}`, which has 27
 elements, reaches every `n` divisible by 4.
 
-`D_3(4) = 27`, so the conjectured bound holds with equality at `n = 4`; that value is stated as
-data, and no upper bound is proved here, at `n = 4` or at any other `n`. No value of `D_3(n)` is
-determined, the ten-word code is not claimed to be optimal, and nothing is claimed at any `q` other
-than 3.
-
-As of 2026-09-16 no published construction exceeds q^{3n/4} for square-difference-free subsets of
-F_q[T]; Naslund's Conjecture 13 has two indexed citing papers, neither addressing it; the small
-values I_3(3) = 4 and I_3(4) = 10 are stated as data whose prior appearance is under literature
-review (Calderbank–Frankl–Graham–Li–Shepp 1993 give the LP bounds 5 and 11).
+No upper bound on `D_3(n)` is proved and no value of `D_3(n)` is determined, at `n = 4` or anywhere
+else; the ten-word code is not claimed to be optimal; nothing is claimed at any `q` other than 3.
+Write `I_3(K)` for the largest size of a subset of `F_3^K` in which no two elements differ by a
+vector with every coordinate in `{0, 1}`; the code was found in the course of this work and shows
+`I_3(4) ≥ 10`. As of 2026-09-16 no published construction exceeds q^{3n/4} for
+square-difference-free subsets of F_q[T]; Naslund's Conjecture 13 has two indexed citing papers,
+neither addressing it; the small values I_3(3) = 4 and I_3(4) = 10 are stated as data whose prior
+appearance is under literature review (Calderbank–Frankl–Graham–Li–Shepp 1993 give the LP bounds
+5 and 11).
 
 Run locally with the pinned Lean and Mathlib versions; there are no GitHub Actions workflows.
 
@@ -45,7 +47,7 @@ python scripts/check-source.py
 python scripts/check_construction.py
 ```
 
-[PROOF.md](PROOF.md) gives the mathematics with the Lean name of every step.
-[VERIFICATION.md](VERIFICATION.md) records the checks and their limits, and
-[DISCLOSURE.md](DISCLOSURE.md) the assistance statement. [Challenge.lean](Challenge.lean) states
-the six theorems; [Solution.lean](Solution.lean) proves them.
+[PROOF.md](PROOF.md) gives the mathematics with the Lean name of every step,
+[VERIFICATION.md](VERIFICATION.md) the checks and their limits, and [DISCLOSURE.md](DISCLOSURE.md)
+the assistance statement. [Challenge.lean](Challenge.lean) states the six theorems;
+[Solution.lean](Solution.lean) proves them.

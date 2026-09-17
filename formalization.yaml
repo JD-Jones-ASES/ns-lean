@@ -126,11 +126,11 @@ automation:
       models: ["Claude (Anthropic)", "GPT-6 (OpenAI)", "Grok"]
       framework: "Claude Code with parallel subagents"
       tool_setup: >-
-        Claude (Anthropic), GPT-6 (OpenAI) and Grok were used, in some form, throughout; the
+        Claude (Anthropic), GPT-6 (OpenAI) and Grok were used throughout; the
         construction and its proofs arose in consultation among these systems, and the repository
         was written by Claude. Lean 4.33.0 and Mathlib v4.33.0 (commit db584cd6) are pinned by the
         committed manifest and lake update is never run. There is no native_decide; the largest
-        kernel computations are the 90-pair code check by decide and the comparison
+        kernel computations are the code property, decided over all 100 ordered pairs of words, and the comparison
         3^128 <= 810^21.
   spend_usd: "not tracked"
   notes: "See DISCLOSURE.md."
@@ -191,8 +191,8 @@ alignment:
         3^128 <= 810^21.
 
 acknowledgements: >-
-  Eric Naslund for the conjecture and the construction it refines; Imre Ruzsa for the digit
-  method behind it; A. R. Calderbank, P. Frankl, R. L. Graham, W.-C. W. Li and L. A. Shepp, and
+  Eric Naslund for the conjecture; Imre Ruzsa for the digit method behind Naslund's Theorem 1;
+  A. R. Calderbank, P. Frankl, R. L. Graham, W.-C. W. Li and L. A. Shepp, and
   Aart Blokhuis, for the setting of the ten-word code; Lean, Mathlib, Comparator, lean4export,
   NanoDa, and the Palomar policy and verifier projects. AI assistance is disclosed above and in
   DISCLOSURE.md.

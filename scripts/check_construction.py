@@ -203,7 +203,7 @@ def main():
             if value(interpolant(s), c) != s[c]:
                 fail("V_s(c) is not s_c")
             identities += 1
-    report.append("interpolants: V_s(c) = s_c for all 81 words s and c = 0, 1, 2 "
+    report.append("interpolants: V_s(c) = s_c for all 81 vectors s in F_3^4 and c = 0, 1, 2 "
                   "({0} identities)".format(identities))
 
     a8 = lift(0, [()])
@@ -270,6 +270,9 @@ def main():
     if not 10 ** 21 > 3 ** 44:
         fail("10^21 > 3^44 is false")
     report.append("growth: 10^21 = 1000000000000000000000 > 984770902183611232881 = 3^44")
+    if not (810 ** 21 == 3 ** 84 * 10 ** 21 and 3 ** 128 <= 810 ** 21):
+        fail("3^128 <= 810^21 is false")
+    report.append("growth: 810^21 = 3^84 * 10^21 > 3^84 * 3^44 = 3^128, the comparison the Lean proof uses")
 
     if not 16 * 10000 > 21 * 7619:
         fail("16/21 > 7619/10000 is false")

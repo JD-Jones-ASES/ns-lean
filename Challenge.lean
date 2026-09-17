@@ -5,15 +5,14 @@ import Mathlib
 
 Let `P_{3,n}` be the polynomials of degree less than `n` over the field with three elements, and
 call a set `A ⊆ P_{3,n}` *square-difference-free* when no two of its elements differ by a nonzero
-square. Write `D_3(n)` for the largest size of such a set. Naslund (*Paley graphs and Sárközy's
-theorem in function fields*, arXiv:2203.01293v3, Theorem 1) constructs, for `4 ∣ n`, a
-square-difference-free subset of `P_{q,n}` with `q^{3n/4}` elements, and conjectures
+square. Write `D_3(n)` for the largest size of such a set. For odd `q` and `4 ∣ n`, Naslund
+(*Paley graphs and Sárközy's theorem in function fields*, arXiv:2203.01293v3, Theorem 1)
+constructs a square-difference-free subset of `P_{q,n}` with `q^{3n/4}` elements, and conjectures
 (Conjecture 13, at `k = 2`) that no square-difference-free subset of `P_{q,n}` is larger: for
 `q = 3` this says `D_3(n) ≤ 3^{3n/4}` whenever `4 ∣ n`.
 
 This file states that the conjectured inequality fails at `q = 3` for every `n ≡ 0 (mod 4)` with
-`n ≥ 8` (it holds with equality at `n = 4`), and that the growth rate of `D_3(n)` is at least
-`16/21` in base `3`.
+`n ≥ 8`, and that the growth rate of `D_3(n)` is at least `16/21` in base `3`.
 
 ## What is claimed
 
@@ -93,7 +92,7 @@ theorem conjecture13_fails_3_2_all (n : ℕ) (h4 : 4 ∣ n) (h8 : 8 ≤ n) :
     ¬ ∀ A : Finset (Polynomial (ZMod 3)), DegLT n A → SDF A → A.card ≤ 3 ^ (3 * n / 4) := by
   sorry
 
-/-- **The growth rate.** `16/21 = 0.7619… ≤ liminf log D_3(n) / (n log 3)`. -/
+/-- **The growth rate.** `16/21 = 0.76190… ≤ liminf log D_3(n) / (n log 3)`. -/
 theorem liminf_ge :
     (16 / 21 : ℝ) ≤
       Filter.liminf (fun n : ℕ => Real.log (D3 n) / (n * Real.log 3)) Filter.atTop := by

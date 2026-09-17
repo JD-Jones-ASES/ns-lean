@@ -4,8 +4,9 @@
 Rejected outside comments and strings: sorry, admit, axiom, unsafe, partial, native_decide,
 implemented_by, extern, Lean.ofReduceBool, and the kernel-bypass options debug.skipKernelTC and
 debug.byAsSorry. Challenge.lean carries the submitted statements with intentional sorry
-placeholders, so it is checked only for the two kernel-bypass options. The compiled Test.Axioms
-module and an independent kernel replay are separate checks.
+placeholders, so it is checked for every token except sorry. The [leanOptions] table of
+lakefile.toml may not set any debug. option. The compiled Test.Axioms module and an independent
+kernel replay are separate checks.
 """
 
 from pathlib import Path
@@ -15,7 +16,10 @@ import sys
 FORBIDDEN = re.compile(
     r"\b(?:sorry|admit|axiom|unsafe|partial|native_decide|implemented_by|extern)\b"
     r"|\bLean\.ofReduceBool\b|\bdebug\.skipKernelTC\b|\bdebug\.byAsSorry\b")
-KERNEL_BYPASS = re.compile(r"\bdebug\.skipKernelTC\b|\bdebug\.byAsSorry\b")
+CHALLENGE_FORBIDDEN = re.compile(
+    r"\b(?:admit|axiom|unsafe|partial|native_decide|implemented_by|extern)\b"
+    r"|\bLean\.ofReduceBool\b|\bdebug\.skipKernelTC\b|\bdebug\.byAsSorry\b")
+LAKEFILE_DEBUG = re.compile(r"^\s*debug\.")
 
 
 def code_without_comments_or_strings(source):
@@ -108,13 +112,29 @@ def main():
         print(f"Challenge.lean: {error}", file=sys.stderr)
         failures += 1
     else:
-        for match in KERNEL_BYPASS.finditer(cleaned):
+        for match in CHALLENGE_FORBIDDEN.finditer(cleaned):
             line = cleaned.count("\n", 0, match.start()) + 1
-            print(f"Challenge.lean:{line}: prohibited option {match.group()}", file=sys.stderr)
+            print(f"Challenge.lean:{line}: prohibited token {match.group()}", file=sys.stderr)
             failures += 1
+    lakefile = root / "lakefile.toml"
+    try:
+        options = lakefile.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        print(f"lakefile.toml: {error}", file=sys.stderr)
+        failures += 1
+    else:
+        section = None
+        for number, text in enumerate(options.splitlines(), 1):
+            stripped = text.strip()
+            if stripped.startswith("["):
+                section = stripped
+            elif section == "[leanOptions]" and LAKEFILE_DEBUG.match(text):
+                print(f"lakefile.toml:{number}: prohibited option {stripped}", file=sys.stderr)
+                failures += 1
     if failures:
         return 1
-    print(f"Source guard passed for {len(files)} proof files; Challenge checked for kernel-bypass options only.")
+    print(f"Source guard passed for {len(files)} proof files, Challenge.lean (every token except sorry) "
+          "and the lakefile options.")
     return 0
 
 
